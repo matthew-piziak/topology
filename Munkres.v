@@ -1,5 +1,6 @@
 Require Export Coq.Sets.Ensembles.
 Require Export Coq.Sets.Powerset.
+Require Import Setoid.
 
 Section Chapter_1.
   Variable U : Type.
@@ -35,6 +36,12 @@ Qed.
 (*     Setminus A (Union B C) = Intersection (Setminus A B) (Setminus A C). *)
 (* Proof.*)
 
+Lemma intersection_inclusion:
+    forall A B C : Ensemble U, Included U A (Intersection U B C) -> Included U A B.
+  Proof.
+    intros A B C H.
+
+
 Theorem exercise_1_2_1: forall A B C : Ensemble U,
     Included U A B /\ Included U A C <-> Included U A (Intersection U B C).
 Proof.
@@ -45,5 +52,7 @@ Proof.
   apply Intersection_maximal; assumption.
   intros.
   split.
+
+
 
 (* End Chapter_1. *)
