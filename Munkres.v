@@ -32,16 +32,6 @@ Proof.
     elim H'; intros x0 H'0; elim H'0; auto with sets.
 Qed.
 
-(* Theorem exercise_1_1_3: forall A B C : Ensemble U, *)
-(*     Setminus A (Union B C) = Intersection (Setminus A B) (Setminus A C). *)
-(* Proof.*)
-
-Lemma intersection_inclusion:
-    forall A B C : Ensemble U, Included U A (Intersection U B C) -> Included U A B.
-  Proof.
-    intros A B C H.
-
-
 Theorem exercise_1_2_1: forall A B C : Ensemble U,
     Included U A B /\ Included U A C <-> Included U A (Intersection U B C).
 Proof.
@@ -49,10 +39,26 @@ Proof.
   split.
   intros.
   destruct H.
-  apply Intersection_maximal; assumption.
-  intros.
+  unfold Included.
+  unfold Included in H.
+  intros x HA.
+  unfold In.
   split.
+  unfold Included in H0.
+  apply H.
+  assumption.
+  unfold Included in H0.
+  apply H0.
+  assumption.
+  intros.
+  split;
+  unfold Included;
+  unfold Included in H;
+  intros x HA;
+  destruct (H x HA);
+  assumption.
+Qed.
 
+End Chapter_1.
 
-
-(* End Chapter_1. *)
+Locate "_ * _".
