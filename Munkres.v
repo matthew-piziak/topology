@@ -102,4 +102,71 @@ Proof.
 Qed.
 
 
+Theorem exercise_1_2_g: forall A B C : Ensemble U,
+    Intersection U A (Setminus U B C) = Setminus U (Intersection U A B) (Intersection U A C).
+Proof.
+  intros.
+  apply Extensionality_Ensembles.
+  split.
+  - unfold Included.
+    intros.
+    unfold In.
+    unfold In in H.
+    unfold Setminus.
+    split.
+    + unfold In.
+      inversion H.
+      split.
+      * assumption.
+      * destruct H1.
+        assumption.
+    + destruct H.
+      unfold In in H0.
+      unfold Setminus in H0.
+      unfold not.
+      intros.
+      unfold In in H1.
+      destruct H1.
+      destruct H0.
+      contradiction.
+  - unfold Included.
+    intros.
+    unfold In.
+    split.
+    + unfold In in H.
+      unfold Setminus in H.
+      destruct H.
+      unfold In in H.
+      destruct H.
+      assumption.
+    + unfold In.
+      unfold Setminus.
+      split.
+      * unfold In in H.
+        unfold Setminus in H.
+        destruct H.
+        unfold In in H.
+        destruct H.
+        assumption.
+      * unfold not.
+        intros.
+        destruct H.
+        unfold not in H1.
+        apply H1.
+        unfold In.
+        split.
+        unfold In in H.
+        destruct H.
+        assumption.
+        assumption.
+Qed.
+
+
+
+(* Theorem exercise_1_2_j: forall A B C D : Ensemble U, *)
+(*     Included U A C /\ Included U B D ->  *)
+
+(* Theorem exercise 1_3_a: forall (A B A0 B0 : Ensemble U) (F : A -> B), *)
+(*     Included U A0 A /\ Included U B0 B -> *)
+
 End Chapter_1.
