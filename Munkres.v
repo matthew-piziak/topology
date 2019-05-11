@@ -42,13 +42,41 @@ Proof.
   auto with sets.
 Qed.
 
-(* Lemma swap {X} (P: X -> Prop):  (exists x, ~ P x) -> ~ forall x, P x. *)
-(* Proof. intros [x HPx] H. apply HPx, H. Qed. *)
+Lemma singleton_1_0:
+  ~ Singleton nat 1 0.
+Proof.
+  unfold not.
+  intros.
+  inversion H.
+Qed.
 
-(* Theorem exercise_1_2_a_backward: exists A B C : Ensemble U, *)
-(*     ~ (Included U A (Union U B C) -> Included U A B /\ Included U A C). *)
-(* Proof. *)
-(*   unfold not. *)
+Lemma different_singletons_not_included:
+  ~ Included nat (Singleton nat 0) (Singleton nat 1).
+Proof.
+  unfold not.
+  intros.
+  unfold Included in H.
+  specialize (H 0).
+  unfold In in H.
+  apply singleton_1_0.
+  apply H.
+  apply In_singleton.
+Qed.
+
+
+Theorem exercise_1_2_a_backward: exists (A B C : Ensemble nat),
+    ~ (Included nat A (Union nat B C) -> Included nat A B /\ Included nat A C).
+Proof.
+  unfold not.
+  exists (Singleton nat 0).
+  exists (Singleton nat 0).
+  exists (Singleton nat 1).
+  intros.
+  destruct H.
+  - auto with sets.
+  - apply different_singletons_not_included in H0.
+    assumption.
+Qed.
 
 (* Theorem exercise_1_2_b: forall A B C : Ensemble U, *)
 (*     Included U A B \/ Included U A C <-> Included U A (Union U B C). *)
