@@ -78,29 +78,37 @@ Proof.
     assumption.
 Qed.
 
-(* Theorem exercise_1_2_b: forall A B C : Ensemble U, *)
-(*     Included U A B \/ Included U A C <-> Included U A (Union U B C). *)
-(* Proof. *)
-(*   intros. *)
-(*   split. *)
-(*   - intros. *)
-(*     destruct H. *)
-(*     * unfold Included. *)
-(*       unfold Included in H. *)
-(*       intros. *)
-(*       apply H in H0. *)
-(*       unfold In. *)
-(*       left. *)
-(*       assumption. *)
-(*     * unfold Included. *)
-(*       unfold Included in H. *)
-(*       intros. *)
-(*       apply H in H0. *)
-(*       unfold In. *)
-(*       right. *)
-(*       assumption. *)
-(*   - intros. *)
+Theorem exercise_1_2_b_forward: forall A B C : Ensemble U,
+    Included U A B \/ Included U A C -> Included U A (Union U B C).
+Proof.
+  intros.
+  destruct H.
+  - unfold Included.
+    unfold Included in H.
+    intros.
+    unfold In.
+    left.
+    apply H in H0.
+    assumption.
+  - unfold Included; unfold Included in H.
+    intros.
+    unfold In.
+    right.
+    apply H in H0.
+    assumption.
+Qed.
 
+Theorem exercise_1_2_b_backward: exists (A B C : Ensemble nat),
+    ~ Included nat A (Union nat B C) -> Included nat A B \/ Included nat A C.
+Proof.
+  unfold not.
+  exists (Union nat (Singleton nat 0) (Singleton nat 1)).
+  exists (Singleton nat 0).
+  exists (Singleton nat 1).
+  intros.
+  destruct H.
+  auto with sets.
+Qed.
 
 Theorem exercise_1_2_c: forall A B C : Ensemble U,
     Included U A B /\ Included U A C <-> Included U A (Intersection U B C).
