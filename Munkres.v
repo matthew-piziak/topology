@@ -4,6 +4,7 @@ Require Import Setoid.
 
 Section Chapter_1.
   Variable U : Type.
+  Variable V : Type.
 
 Theorem exercise_1_1_1: forall A B C : Ensemble U,
     Union U A (Intersection U B C) = (Intersection U (Union U A B) (Union U A C)).
@@ -48,6 +49,13 @@ Proof.
   unfold not.
   intros.
   inversion H.
+Qed.
+
+Lemma same_singletons_included:
+  Included nat (Singleton nat 0) (Singleton nat 0).
+Proof.
+  intros.
+  auto with sets.
 Qed.
 
 Lemma different_singletons_not_included:
@@ -110,33 +118,43 @@ Proof.
   auto with sets.
 Qed.
 
-Theorem exercise_1_2_c: forall A B C : Ensemble U,
+Theorem exercise_1_2_c: forall (A B C : Ensemble U),
     Included U A B /\ Included U A C <-> Included U A (Intersection U B C).
 Proof.
   intros.
   split.
-  intros.
-  destruct H.
-  unfold Included.
-  unfold Included in H.
-  intros x HA.
-  unfold In.
-  split.
-  unfold Included in H0.
-  apply H.
-  assumption.
-  unfold Included in H0.
-  apply H0.
-  assumption.
-  intros.
-  split;
-  unfold Included;
-  unfold Included in H;
-  intros x HA;
-  destruct (H x HA);
-  assumption.
+  - intros.
+    destruct H.
+    unfold Included.
+    unfold Included in H.
+    unfold Included in H0.
+    split; try apply H; try apply H0; assumption.
+  - intros.
+    split; unfold Included; unfold Included in H; intros; apply H in H0; destruct H0; assumption.
 Qed.
 
+(* Theorem exercise_1_2_d_forward: exists (A B C : Ensemble nat), *)
+(*     ~ (Included nat A B \/ Included nat A C -> Included nat A (Intersection nat B C)). *)
+(* Proof. *)
+(*   unfold not. *)
+(*   exists (Singleton nat 0). *)
+(*   exists (Singleton nat 0). *)
+(*   exists (Singleton nat 1). *)
+
+(* Theorem exercise_1_2_d_backward: forall (A B C : Ensemble U), *)
+(*     Included U A (Intersection U B C) -> Included U A B \/ Included U A C. *)
+(* Proof. *)
+(*   intros. *)
+(*   unfold Included. *)
+(*   unfold Included in H. *)
+(*   unfold In in H. *)
+(*   unfold In. *)
+
+(* Theorem exercise_1_2_e : exists (A B : Ensemble nat), *)
+(*     ~ (Setminus nat A (Setminus nat A B) = B). *)
+(* Proof. *)
+(*   exists (Union nat (Singleton nat 0) (Singleton nat 1)). *)
+(*   exists (Union nat (Singleton nat 1) (Singleton nat 2)). *)
 
 Theorem exercise_1_2_g: forall A B C : Ensemble U,
     Intersection U A (Setminus U B C) = Setminus U (Intersection U A B) (Intersection U A C).
@@ -197,12 +215,29 @@ Proof.
         assumption.
 Qed.
 
+Definition Cartesian (U V : Type) (A : Ensemble U) (B : Ensemble V) : Ensemble (U * V) :=
+  fun x => In _ A (fst x) /\ In _ B (snd x).
+
+Theorem exercise_1_1_2_j A B C D :
+    Included U A C /\ Included V B D -> Included (U * V) (Cartesian _ _ A B) (Cartesian _ _ C D).
+Proof.
+intros [HU HV] [x y] [HA HB].
+split.
+- now apply HU.
+- now apply HV.
+Qed.
+
+(* Theorem exercise_1_1_2_k: exists (A B C D: Ensemble nat), *)
+(*     ~ (Included (nat * nat) (Cartesian _ _ A B) (Cartesian _ _ C D) *)
+(*        -> Included nat A C /\ Included nat B D). *)
+(* Proof. *)
+(*   unfold not. *)
+(*   exists (Singleton nat 0). *)
+(*   exists (Empty_set nat). *)
+(*   exists (Singleton nat 1). *)
+(*   exists (Empty_set nat). *)
+(*   intros. *)
 
 
-(* Theorem exercise_1_2_j: forall A B C D : Ensemble U, *)
-(*     Included U A C /\ Included U B D ->  *)
-
-(* Theorem exercise 1_3_a: forall (A B A0 B0 : Ensemble U) (F : A -> B), *)
-(*     Included U A0 A /\ Included U B0 B -> *)
 
 End Chapter_1.
