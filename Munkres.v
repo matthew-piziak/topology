@@ -82,8 +82,7 @@ Proof.
   intros.
   destruct H.
   - auto with sets.
-  - apply different_singletons_not_included in H0.
-    assumption.
+  - now apply different_singletons_not_included in H0.
 Qed.
 
 Theorem exercise_1_2_b_forward: forall A B C : Ensemble U,
@@ -96,14 +95,12 @@ Proof.
     intros.
     unfold In.
     left.
-    apply H in H0.
-    assumption.
+    now apply H in H0.
   - unfold Included; unfold Included in H.
     intros.
     unfold In.
     right.
-    apply H in H0.
-    assumption.
+    now apply H in H0.
 Qed.
 
 Theorem exercise_1_2_b_backward: exists (A B C : Ensemble nat),
@@ -128,9 +125,9 @@ Proof.
     unfold Included.
     unfold Included in H.
     unfold Included in H0.
-    split; try apply H; try apply H0; assumption.
+    now split; try apply H; try apply H0.
   - intros.
-    split; unfold Included; unfold Included in H; intros; apply H in H0; destruct H0; assumption.
+    now split; unfold Included; unfold Included in H; intros; apply H in H0; destruct H0.
 Qed.
 
 (* Theorem exercise_1_2_d_forward: exists (A B C : Ensemble nat), *)
@@ -170,10 +167,7 @@ Proof.
     split.
     + unfold In.
       inversion H.
-      split.
-      * assumption.
-      * destruct H1.
-        assumption.
+      now split; try destruct H1.
     + destruct H.
       unfold In in H0.
       unfold Setminus in H0.
@@ -181,8 +175,7 @@ Proof.
       intros.
       unfold In in H1.
       destruct H1.
-      destruct H0.
-      contradiction.
+      now destruct H0.
   - unfold Included.
     intros.
     unfold In.
@@ -191,8 +184,7 @@ Proof.
       unfold Setminus in H.
       destruct H.
       unfold In in H.
-      destruct H.
-      assumption.
+      now destruct H.
     + unfold In.
       unfold Setminus.
       split.
@@ -200,8 +192,7 @@ Proof.
         unfold Setminus in H.
         destruct H.
         unfold In in H.
-        destruct H.
-        assumption.
+        now destruct H.
       * unfold not.
         intros.
         destruct H.
@@ -210,8 +201,7 @@ Proof.
         unfold In.
         split.
         unfold In in H.
-        destruct H.
-        assumption.
+        now destruct H.
         assumption.
 Qed.
 
@@ -237,7 +227,5 @@ Qed.
 (*   exists (Singleton nat 1). *)
 (*   exists (Empty_set nat). *)
 (*   intros. *)
-
-
 
 End Chapter_1.
