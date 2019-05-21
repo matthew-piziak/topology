@@ -178,10 +178,7 @@ Proof.
     + unfold In.
       unfold Setminus.
       split.
-      * unfold In in H.
-        unfold Setminus in H.
-        destruct H.
-        unfold In in H.
+      * destruct H.
         destruct H.
         assumption.
       * unfold not.
