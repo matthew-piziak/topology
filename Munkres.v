@@ -175,15 +175,26 @@ Proof.
   apply (Singleton nat 0).
 Qed.
 
+Lemma intersection_included : forall (B C : Ensemble U) (x : U),
+    Intersection U B C x -> B x.
+Proof with intuition.
+  intros.
+  now destruct H.
+Qed.
 
-(* Theorem exercise_1_2_d_backward: forall (A B C : Ensemble U), *)
-(*     Included U A (Intersection U B C) -> Included U A B \/ Included U A C. *)
-(* Proof. *)
-(*   intros. *)
-(*   unfold Included. *)
-(*   unfold Included in H. *)
-(*   unfold In in H. *)
-(*   unfold In. *)
+Theorem exercise_1_2_d_backward: forall (A B C : Ensemble U),
+    Included U A (Intersection U B C) -> Included U A B \/ Included U A C.
+Proof with intuition.
+  intros.
+  hnf in H.
+  unfold In in H.
+  unfold Included.
+  left.
+  unfold In.
+  firstorder.
+  apply H in H0.
+  now destruct H0.
+Qed.
 
 (* Theorem exercise_1_2_e : exists (A B : Ensemble nat), *)
 (*     ~ (Setminus nat A (Setminus nat A B) = B). *)
