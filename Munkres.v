@@ -226,11 +226,9 @@ Proof.
     + unfold In.
       unfold Setminus.
       split.
-      * unfold In in H.
-        unfold Setminus in H.
+      * destruct H.
         destruct H.
-        unfold In in H.
-        now destruct H.
+        assumption.
       * unfold not.
         intros.
         destruct H.
