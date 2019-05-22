@@ -1,5 +1,6 @@
 Require Export Coq.Sets.Ensembles.
 Require Export Coq.Sets.Powerset.
+Require Export Coq.Sets.Powerset_facts.
 Require Import Setoid.
 
 Section Chapter_1.
@@ -130,13 +131,50 @@ Proof.
     now split; unfold Included; unfold Included in H; intros; apply H in H0; destruct H0.
 Qed.
 
-(* Theorem exercise_1_2_d_forward: exists (A B C : Ensemble nat), *)
-(*     ~ (Included nat A B \/ Included nat A C -> Included nat A (Intersection nat B C)). *)
-(* Proof. *)
-(*   unfold not. *)
-(*   exists (Singleton nat 0). *)
-(*   exists (Singleton nat 0). *)
-(*   exists (Singleton nat 1). *)
+Lemma empty_intersection:
+  ~ (Intersection nat (Singleton nat 0) (Empty_set nat) 0).
+Proof.
+  unfold not.
+  intros.
+  destruct H.
+  inversion H0.
+Qed.
+
+Lemma not_included:
+  ~ (Included nat (Singleton nat 0) (Intersection nat (Singleton nat 0) (Empty_set nat))).
+Proof.
+  unfold not.
+  intros.
+  unfold Included in H.
+  unfold In in H.
+  specialize (H 0).
+  apply empty_intersection.
+  apply H.
+  apply Singleton_intro.
+  reflexivity.
+Qed.
+
+Lemma included_reflexive: forall (A : Ensemble nat) (x : nat),
+    Included nat (Singleton nat x) (Singleton nat x).
+Proof.
+  auto with sets.
+Qed.
+
+Theorem exercise_1_2_d_forward: exists (A B C : Ensemble nat),
+    ~ (Included nat A B \/ Included nat A C -> Included nat A (Intersection nat B C)).
+Proof.
+  unfold not.
+  exists (Singleton nat 0).
+  exists (Singleton nat 0).
+  exists (Empty_set nat).
+  intros.
+  apply not_included.
+  apply H.
+  left.
+  apply included_reflexive.
+  apply (Singleton nat 0).
+Qed.
+
 
 (* Theorem exercise_1_2_d_backward: forall (A B C : Ensemble U), *)
 (*     Included U A (Intersection U B C) -> Included U A B \/ Included U A C. *)
