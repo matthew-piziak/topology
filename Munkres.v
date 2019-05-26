@@ -4,34 +4,81 @@ Require Export Coq.Sets.Powerset_facts.
 Require Import Setoid.
 
 Section Chapter_1.
-  Variable U : Type.
-  Variable V : Type.
 
-Theorem exercise_1_1_1: forall A B C : Ensemble U,
+Theorem exercise_1_1_1: forall (U : Type) (A B C : Ensemble U),
     Union U A (Intersection U B C) = (Intersection U (Union U A B) (Union U A C)).
 Proof.
-    intros A B C.
-    apply Extensionality_Ensembles.
-    split; red; intros x H'.
-    elim H'; auto with sets.
-    intros x0 H'0; elim H'0; auto with sets.
-    elim H'.
-    intros x0 H'0; elim H'0; auto with sets.
-    intros x1 H'1 H'2; try exact H'2.
-    generalize H'1.
-    elim H'2; auto with sets.
+  intros.
+  apply Extensionality_Ensembles.
+  split.
+  - unfold Included.
+    intros.
+    unfold In.
+    unfold In in H.
+    split.
+    + unfold In.
+      destruct H.
+      * now left.
+      * right.
+        unfold In in H.
+        now destruct H.
+    + unfold In.
+      destruct H.
+      * now left.
+      * right.
+        unfold In in H.
+        now destruct H.
+  - unfold Included.
+    intros.
+    unfold In.
+    unfold In in H.
+    destruct H.
+    + unfold In in H, H0.
+      destruct H.
+      * now left.
+      * destruct H0.
+        now left.
+        right.
+        auto with sets.
 Qed.
 
-Theorem exercise_1_1_2: forall A B C : Ensemble U,
+Theorem exercise_1_1_2: forall (U : Type) (A B C : Ensemble U),
     Intersection U A (Union U B C) = (Union U (Intersection U A B) (Intersection U A C)).
 Proof.
-    intros A B C.
-    apply Extensionality_Ensembles.
-    split; red; intros x H'.
-    elim H'.
-    intros x0 H'0 H'1; generalize H'0.
-    elim H'1; auto with sets.
-    elim H'; intros x0 H'0; elim H'0; auto with sets.
+  intros.
+  apply Extensionality_Ensembles.
+  split.
+  - unfold Included.
+    intros.
+    unfold In.
+    unfold In in H.
+    destruct H.
+    unfold In in H0.
+    destruct H0.
+    left.
+    unfold In.
+    now split.
+    right.
+    unfold In.
+    now split.
+  - unfold Included.
+    intros.
+    unfold In in H.
+    unfold In.
+    split.
+    destruct H.
+    unfold In in H.
+    now destruct H.
+    unfold In in H.
+    now destruct H.
+    unfold In.
+    destruct H.
+    unfold In in H.
+    destruct H.
+    now left.
+    unfold In in H.
+    destruct H.
+    now right.
 Qed.
 
 Theorem exercise_1_2_a_forward: forall A B C : Ensemble U,
@@ -154,8 +201,8 @@ Proof.
   reflexivity.
 Qed.
 
-Lemma included_reflexive: forall (A : Ensemble nat) (x : nat),
-    Included nat (Singleton nat x) (Singleton nat x).
+Lemma included_reflexive: forall (A : Ensemble U) ,
+    Included U A A.
 Proof.
   auto with sets.
 Qed.
@@ -196,11 +243,42 @@ Proof with intuition.
   now destruct H0.
 Qed.
 
-(* Theorem exercise_1_2_e : exists (A B : Ensemble nat), *)
-(*     ~ (Setminus nat A (Setminus nat A B) = B). *)
-(* Proof. *)
-(*   exists (Union nat (Singleton nat 0) (Singleton nat 1)). *)
-(*   exists (Union nat (Singleton nat 1) (Singleton nat 2)). *)
+Lemma setminus'': forall (A : Ensemble U),
+    Setminus U A A = Empty_set U.
+Proof.
+  pose Setminus_Included_empty as H.
+  Search Included.
+
+
+Lemma setminus':
+  (Setminus nat (Union nat (Singleton nat 0) (Singleton nat 1)) (Singleton nat 1)) = (Singleton nat 0).
+Proof with intuition.
+  intros.
+  rewrite Setminus_Union_l.
+  apply Extensionality_Ensembles.
+  unfold Same_set.
+  split.
+  - unfold Included.
+    intros.
+
+
+
+Lemma setminus:
+  (Setminus nat
+            (Union nat (Singleton nat 0) (Singleton nat 1))
+            (Union nat (Singleton nat 1) (Singleton nat 2))) = Singleton nat 0.
+Proof with intuition.
+  intros.
+  rewrite Setminus_Union_r.
+
+Theorem exercise_1_2_e : exists (A B : Ensemble nat),
+    Setminus nat A (Setminus nat A B) <> B.
+Proof with intuition.
+  exists (Union nat (Singleton nat 0) (Singleton nat 1)).
+  exists (Union nat (Singleton nat 1) (Singleton nat 2)).
+  unfold not.
+  intros.
+
 
 Theorem exercise_1_2_g: forall A B C : Ensemble U,
     Intersection U A (Setminus U B C) = Setminus U (Intersection U A B) (Intersection U A C).
