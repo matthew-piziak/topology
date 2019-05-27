@@ -81,7 +81,7 @@ Proof.
     now right.
 Qed.
 
-Theorem exercise_1_2_a_forward: forall A B C : Ensemble U,
+Theorem exercise_1_2_a_forward: forall (U:Type) (A B C : Ensemble U),
     Included U A B /\ Included U A C -> Included U A (Union U B C).
 Proof.
   intros.
@@ -133,7 +133,7 @@ Proof.
   - now apply different_singletons_not_included in H0.
 Qed.
 
-Theorem exercise_1_2_b_forward: forall A B C : Ensemble U,
+Theorem exercise_1_2_b_forward: forall (U : Type) (A B C : Ensemble U),
     Included U A B \/ Included U A C -> Included U A (Union U B C).
 Proof.
   intros.
@@ -163,7 +163,7 @@ Proof.
   auto with sets.
 Qed.
 
-Theorem exercise_1_2_c: forall (A B C : Ensemble U),
+Theorem exercise_1_2_c: forall (U : Type) (A B C : Ensemble U),
     Included U A B /\ Included U A C <-> Included U A (Intersection U B C).
 Proof.
   intros.
@@ -201,7 +201,7 @@ Proof.
   reflexivity.
 Qed.
 
-Lemma included_reflexive: forall (A : Ensemble U) ,
+Lemma included_reflexive: forall (U : Type) (A : Ensemble U) ,
     Included U A A.
 Proof.
   auto with sets.
@@ -219,17 +219,16 @@ Proof.
   apply H.
   left.
   apply included_reflexive.
-  apply (Singleton nat 0).
 Qed.
 
-Lemma intersection_included : forall (B C : Ensemble U) (x : U),
+Lemma intersection_included : forall (U : Type) (B C : Ensemble U) (x : U),
     Intersection U B C x -> B x.
 Proof with intuition.
   intros.
   now destruct H.
 Qed.
 
-Theorem exercise_1_2_d_backward: forall (A B C : Ensemble U),
+Theorem exercise_1_2_d_backward: forall (U : Type) (A B C : Ensemble U),
     Included U A (Intersection U B C) -> Included U A B \/ Included U A C.
 Proof with intuition.
   intros.
@@ -243,12 +242,24 @@ Proof with intuition.
   now destruct H0.
 Qed.
 
-Lemma setminus'': forall (A : Ensemble U),
+Lemma setminus'': forall (U : Type) (A : Ensemble U),
     Setminus U A A = Empty_set U.
 Proof.
-  pose Setminus_Included_empty as H.
-  Search Included.
-
+  intros.
+  apply Extensionality_Ensembles.
+  split.
+  - unfold Included.
+    intros.
+    unfold In in H.
+    unfold Setminus in H.
+    unfold In in H.
+    destruct H.
+    contradiction.
+  - unfold Included.
+    intros.
+    unfold In in H.
+    destruct H.
+Qed.
 
 Lemma setminus':
   (Setminus nat (Union nat (Singleton nat 0) (Singleton nat 1)) (Singleton nat 1)) = (Singleton nat 0).
@@ -260,8 +271,31 @@ Proof with intuition.
   split.
   - unfold Included.
     intros.
-
-
+    rewrite setminus'' in H.
+    unfold In in H.
+    destruct H.
+    + unfold In in H.
+      unfold Setminus in H.
+      destruct H.
+      apply H.
+    + unfold In in H.
+      destruct H.
+  - unfold Included.
+    intros.
+    rewrite setminus''.
+    unfold In.
+    left.
+    unfold In.
+    unfold Setminus.
+    split.
+    + assumption.
+    + Search Singleton.
+      apply Singleton_inv in H.
+      rewrite <- H.
+      unfold not.
+      unfold In.
+      apply singleton_1_0.
+Qed.
 
 Lemma setminus:
   (Setminus nat
@@ -270,15 +304,46 @@ Lemma setminus:
 Proof with intuition.
   intros.
   rewrite Setminus_Union_r.
+  rewrite setminus'.
+  Search Setminus.
+  apply Setminus_Disjoint_noop.
+  Search Intersection.
+  apply Extensionality_Ensembles.
+  split.
+  - unfold Included.
+    intros.
+    unfold In in H.
+    destruct H.
+    apply Singleton_inv in H.
+    apply Singleton_inv in H0.
+    rewrite <- H in H0.
+    inversion H0.
+  - unfold Included.
+    intros.
+    unfold In in H.
+    apply Noone_in_empty in H.
+    contradiction.
+Qed.
+
+Lemma extensionality_converse : forall (U : Type) (A B : Ensemble U),
+    A = B -> Same_set U A B.
+Proof.
+  intros.
+  rewrite H.
+  auto with sets.
+Qed.
 
 Theorem exercise_1_2_e : exists (A B : Ensemble nat),
     Setminus nat A (Setminus nat A B) <> B.
 Proof with intuition.
+  intros.
+  unfold not.
   exists (Union nat (Singleton nat 0) (Singleton nat 1)).
   exists (Union nat (Singleton nat 1) (Singleton nat 2)).
-  unfold not.
   intros.
-
+  apply extensionality_converse in H.
+  destruct H.
+  unfold Included in H.
 
 Theorem exercise_1_2_g: forall A B C : Ensemble U,
     Intersection U A (Setminus U B C) = Setminus U (Intersection U A B) (Intersection U A C).
