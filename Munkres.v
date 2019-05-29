@@ -343,7 +343,20 @@ Proof with intuition.
   intros.
   apply extensionality_converse in H.
   destruct H.
-  unfold Included in H.
+  clear H.
+  unfold Included in H0.
+  specialize (H0 2).
+  destruct H0.
+  - right.
+    auto with sets.
+  - clear H0.
+    unfold In in H.
+    inversion H.
+    + apply Singleton_inv in H0.
+      inversion H0.
+    + inversion H0.
+Qed.
+
 
 Theorem exercise_1_2_g: forall A B C : Ensemble U,
     Intersection U A (Setminus U B C) = Setminus U (Intersection U A B) (Intersection U A C).
