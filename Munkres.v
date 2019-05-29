@@ -357,6 +357,9 @@ Proof with intuition.
     + inversion H0.
 Qed.
 
+Theorem exercise_1_2_f : forall (Type U) (A B : Ensemble U),
+    Setminus U A (Setminus U B A) = A.
+Proof.
 
 Theorem exercise_1_2_g: forall A B C : Ensemble U,
     Intersection U A (Setminus U B C) = Setminus U (Intersection U A B) (Intersection U A C).
